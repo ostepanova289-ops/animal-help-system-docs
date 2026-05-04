@@ -2,106 +2,15 @@
 
 |**Сущность**|**Ключевые атрибуты**|**Акторы**|**Характер данных**|
 |-|-|-|-|
-|**Пользователь (User)**|user_id
-role (приют / куратор / волонтёр / помощник / потенциальный владелец / админ)
-full_name
-email
-phone
-password_hash
-status (active / blocked / pending_verification)
-created_at  
-avatar_url
-last_login_at
-consent_pd 
-city
-profile_description
-organization_id (nullable)|Все роли, кроме приютов|Транзакционные|
-|Приют ( Shelter)|organization_id
-name
-city
-address
-contact_phone
-description
-created_at
-status|Приют, Администратор|Транзакционные|
-|**Животное (Animal)**|animal_id
-organization_id (nullable, если животное у частного куратора)
-user_id
-name
-species (собака / кошка / др.)
-breed
-sex
-age
-description
-health_status
-sterilized_flag
-vaccinated_flag
-current_status (на лечении / ищет дом / пристроен / архив)
-adoption_ready_flag
-created_at
-updated_at
-description|Приют, Куратор, Администратор|Транзакционные + Аналитические|
-|**Медиафайл животного (**AnimalМediaFile)|media_id
-animal_id
-uploaded_by
-file_url
-file_type
-mime_type
-size_bytes
-sort_order
-created_at|Приют, куратор, админ||
-|**Заявка на помощь (HelpRequest)**|help_request_id
-animal_id
-created_by
-request_type (лечение / корм / перевозка / передержка / др.)
-title
-description
-priority
-required_by_date
-location
-status (новая / в работе / закрыта / отменена / просрочена)
-created_at
-closed_at|Приют, Куратор, Волонтер, помощник, Администратор|Транзакционные + аналитические|
-|**Отклик на заявку (HelpResponse)**|response_id
-help_request_id
-volunteer_id
-response_comment
-response_status (откликнулся / назначен / отказался / выполнил)
-assigned_at
-completed_at
-completion_comment
-proof_media_url — при необходимости|Волонтёр, Куратор, Приют, Админ|Транзакционные + аналитические|
-|**Заявка на пристройство (AdoptionRequest)**|adoption_application_id
-animal_id
-applicant_user_id
-message
-contact_phone
-housing_type
-has_other_animals_flag
-application_status (новая / на рассмотрении / одобрена / отклонена / завершена)
-created_at
-reviewed_at
-review_comment|Потенциальный владелец, Куратор, Приют, Админ|Транзакционные + аналитические|
-|**Пожертвование (Donation)**|donation_id
-donor_user_id (nullable, если гостевой сценарий допустим)
-animal_id (nullable)
-help_request_id (nullable)
-amount
-currency
-payment_provider
-provider_payment_id
-payment_status (pending / succeeded / failed / refunded)
-created_at
-paid_at
-receipt_url|Помощник, Бухгалтер, Администратор|Транзакционные + аналитические|
-|**История изменений (ChangeLog)**|audit_event_id
-entity_type (animal / help_request / adoption_application / donation / user)
-entity_id
-action_type (create / update / status_change / assign / close / moderate)
-changed_by_user_id
-old_value_json
-new_value_json
-created_at|Система (автоматически), Админ|Аналитические|
+|**Пользователь (User)**|user_id<br>role (приют / куратор / волонтёр / помощник / потенциальный владелец / админ)<br>full_name<br>email<br>phone<br>password_hash<br>status (active / blocked / pending_verification)<br>created_at  <br>avatar_url<br>last_login_at<br>consent_pd <br>city<br>profile_description<br>organization_id (nullable)|Все роли, кроме приютов|Транзакционные|
+|Приют ( Shelter)|organization_id<br>name<br>city<br>address<br>contact_phone<br>description<br>created_at<br>status|Приют, Администратор|Транзакционные|
+|**Животное (Animal)**|animal_id<br>organization_id (nullable, если животное у частного куратора)<br>user_id<br>name<br>species (собака / кошка / др.)<br>breed<br>sex<br>age<br>description<br>health_status<br>sterilized_flag<br>vaccinated_flag<br>current_status (на лечении / ищет дом / пристроен / архив)<br>adoption_ready_flag<br>created_at<br>updated_at<br>description|Приют, Куратор, Администратор|Транзакционные + Аналитические|
+|**Медиафайл животного (**AnimalМediaFile)|media_id<br>animal_id<br>uploaded_by<br>file_url<br>file_type<br>mime_type<br>size_bytes<br>sort_order<br>created_at|Приют, куратор, админ||
+|**Заявка на помощь (HelpRequest)**|help_request_id<br>animal_id<br>created_by<br>request_type (лечение / корм / перевозка / передержка / др.)<br>title<br>description<br>priority<br>required_by_date<br>location<br>status (новая / в работе / закрыта / отменена / просрочена)<br>created_at<br>closed_at|Приют, Куратор, Волонтер, помощник, Администратор|Транзакционные + аналитические|
+|**Отклик на заявку (HelpResponse)**|response_id<br>help_request_id<br>volunteer_id<br>response_comment<br>response_status (откликнулся / назначен / отказался / выполнил)<br>assigned_at<br>completed_at<br>completion_comment<br>proof_media_url — при необходимости|Волонтёр, Куратор, Приют, Админ|Транзакционные + аналитические|
+|**Заявка на пристройство (AdoptionRequest)**|adoption_application_id<br>animal_id<br>applicant_user_id<br>message<br>contact_phone<br>housing_type<br>has_other_animals_flag<br>application_status (новая / на рассмотрении / одобрена / отклонена / завершена)<br>created_at<br>reviewed_at<br>review_comment|Потенциальный владелец, Куратор, Приют, Админ|Транзакционные + аналитические|
+|**Пожертвование (Donation)**|donation_id<br>donor_user_id (nullable, если гостевой сценарий допустим)<br>animal_id (nullable)<br>help_request_id (nullable)<br>amount<br>currency<br>payment_provider<br>provider_payment_id<br>payment_status (pending / succeeded / failed / refunded)<br>created_at<br>paid_at<br>receipt_url|Помощник, Бухгалтер, Администратор|Транзакционные + аналитические|
+|**История изменений (ChangeLog)**|audit_event_id<br>entity_type (animal / help_request / adoption_application / donation / user)<br>entity_id<br>action_type (create / update / status_change / assign / close / moderate)<br>changed_by_user_id<br>old_value_json<br>new_value_json<br>created_at|Система (автоматически), Админ|Аналитические|
 
  
 
@@ -116,4 +25,3 @@ created_at|Система (автоматически), Админ|Аналит�
 |**Мутабельность схемы**|жесткая|жесткая|жесткая|жесткая|жесткая|жесткая|гибкая|гибкая|
 |**транзакции**|Да (регистрация, смена пароля)|Да (обновление статуса + история)|Да (смена статуса + отклик)|Да (атомарно с заявкой)|да|Да(платёжные операции)|Нет|нет|
 |**Итоговое решение**|реляционная БД|реляционная БД|реляционная БД|реляционная БД|реляционная БД|реляционная БД + платежный шлюз|реляционная БД на MVP, далее архив|object storage|
-
