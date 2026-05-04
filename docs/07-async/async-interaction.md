@@ -20,7 +20,7 @@
 
 По формату контракта здесь логично использовать AsyncAPI, потому что обмен можно описать в JSON.
 
-```Plain Text
+```yaml
 asyncapi: 3.0.0
 info:
   title: Donation Payment Result API
@@ -117,4 +117,3 @@ components:
           description: Причина ошибки, если платёж неуспешен
           example: insufficient_funds
 ```
-

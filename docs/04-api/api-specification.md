@@ -1,4 +1,4 @@
-```Plain Text
+```yaml
 openapi: 3.0.3
 
 info:
@@ -668,4 +668,3 @@ components:
           items:
             $ref: '#/components/schemas/HelpRequest'
 ```
-
