@@ -9,16 +9,126 @@ info:
 servers:
   - url: https://animal-help.com
 
+tags:
+  - name: auth
+    description: Авторизация и регистрация
+  - name: animals
+    description: Карточки животных
+  - name: requests
+    description: Заявки на помощь
+
 paths:
+  /api/auth/register:
+    post:
+      tags:
+        - auth
+      summary: Зарегистрировать пользователя по номеру телефона
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Код подтверждения отправлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthCodeResponse'
+
+  /api/auth/verify:
+    post:
+      tags:
+        - auth
+      summary: Подтвердить регистрацию SMS-кодом
+      operationId: verifyRegistration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyCodeRequest'
+      responses:
+        '200':
+          description: Регистрация подтверждена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /api/auth/login:
+    post:
+      tags:
+        - auth
+      summary: Запросить SMS-код для входа
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Код подтверждения отправлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthCodeResponse'
+
+  /api/auth/login/verify:
+    post:
+      tags:
+        - auth
+      summary: Подтвердить вход SMS-кодом
+      operationId: verifyLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyCodeRequest'
+      responses:
+        '200':
+          description: Вход выполнен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /api/auth/resend-code:
+    post:
+      tags:
+        - auth
+      summary: Отправить SMS-код повторно
+      operationId: resendAuthCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Код отправлен повторно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthCodeResponse'
+
   /api/animals:
     get:
+      tags:
+        - animals
       summary: Получить список карточек животных
       operationId: getAnimals
       parameters:
         - name: search
           in: query
           required: false
-          description: Поиск по кличке
+          description: Поиск по кличке или описанию
           schema:
             type: string
         - name: species
@@ -27,6 +137,12 @@ paths:
           description: Фильтр по виду животного
           schema:
             $ref: '#/components/schemas/AnimalSpecies'
+        - name: status
+          in: query
+          required: false
+          description: Фильтр по статусу животного
+          schema:
+            $ref: '#/components/schemas/AnimalStatus'
         - name: city
           in: query
           required: false
@@ -42,6 +158,8 @@ paths:
                 $ref: '#/components/schemas/AnimalListResponse'
 
     post:
+      tags:
+        - animals
       summary: Создать карточку животного
       operationId: createAnimal
       requestBody:
@@ -60,6 +178,8 @@ paths:
 
   /api/animals/{animalId}:
     get:
+      tags:
+        - animals
       summary: Получить карточку животного
       operationId: getAnimalById
       parameters:
@@ -75,6 +195,8 @@ paths:
           description: Карточка не найдена
 
     patch:
+      tags:
+        - animals
       summary: Изменить карточку животного
       operationId: updateAnimal
       parameters:
@@ -96,6 +218,8 @@ paths:
           description: Карточка не найдена
 
     delete:
+      tags:
+        - animals
       summary: Удалить карточку животного
       operationId: deleteAnimal
       parameters:
@@ -108,6 +232,8 @@ paths:
 
   /api/animals/{animalId}/status:
     patch:
+      tags:
+        - animals
       summary: Изменить статус животного
       operationId: updateAnimalStatus
       parameters:
@@ -130,6 +256,8 @@ paths:
 
   /api/animals/{animalId}/photos:
     post:
+      tags:
+        - animals
       summary: Загрузить фотографию животного
       operationId: uploadAnimalPhoto
       parameters:
@@ -314,6 +442,77 @@ components:
         example: PHOTO-001
 
   schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - phone
+        - role
+      properties:
+        phone:
+          type: string
+          example: "+79991234567"
+        role:
+          type: string
+          example: volunteer
+        name:
+          type: string
+          nullable: true
+          example: Анна
+        organizationName:
+          type: string
+          nullable: true
+          example: Приют "Лапа"
+
+    LoginRequest:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+          example: "+79991234567"
+
+    VerifyCodeRequest:
+      type: object
+      required:
+        - phone
+        - code
+      properties:
+        phone:
+          type: string
+          example: "+79991234567"
+        code:
+          type: string
+          example: "123456"
+
+    AuthCodeResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Код подтверждения отправлен
+
+    AuthResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+      properties:
+        accessToken:
+          type: string
+          example: jwt-access-token
+        refreshToken:
+          type: string
+          example: jwt-refresh-token
+        userId:
+          type: string
+          example: USER-001
+        role:
+          type: string
+          example: volunteer
+
     AnimalSpecies:
       type: string
       enum:
